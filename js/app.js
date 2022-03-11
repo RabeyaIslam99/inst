@@ -1,33 +1,42 @@
-let posts=[ ];
+let posts=[];
 
-const likedPostsId = [];
+let likedPostsId = [];
 const reportedPostsId = [];
 
 const getLikedPosts = () => {
+ 
     return posts.filter((post) => likedPostsId.includes(post.id));
 };
 
 const getReportedPosts = () => {
+ 
     return posts.filter((post) => reportedPostsId.includes(post.id));
+    
 };
 
 const isLiked = (id) => {
-    return likedPostsId?.length && !!likedPostsId.includes(id);
+  console.log(id)
+    return likedPostsId.length && likedPostsId.includes(id);
+    
 };
 
 const addToLiked = (id) => {
-    likedPostsId.plus(id); 
-    showPosts(posts);
+    likedPostsId.push(id); 
+    
+    displayLikedPosts(likedPostsId);
+
+
 };
 
 const reportPost = (id) => {
     reportedPostsId.push(id);
     const remainingPosts = posts.filter((post) => !reportedPostsId.includes(post.id));
+   
     showPosts(remainingPosts);
 };
 
 const displayContent = (text) => {
-    return text.length < 30 ? 'text' : text.slice(0, 30) + "<span class='fw-bold'>... read more</span>";
+    return text?.length < 30 ? text : text?.slice(0, 30) + "<span class='fw-bold'>... read more</span>";
 };
 
 const switchTab = (id) => {
@@ -35,8 +44,9 @@ const switchTab = (id) => {
         document.getElementById( "posts" ).style.display = "grid";
         document.getElementById( "liked" ).style.display = "none";
         document.getElementById( "reported" ).style.display = "none";
+        
     } else if (id === "liked") {
-        document.getElementById( "liked" ).style.display = "block";
+        document.getElementById( "liked" ).style.display = "grid";
         document.getElementById( "posts" ).style.display = "none";
         document.getElementById( "reported" ).style.display = "none";
 
@@ -51,7 +61,9 @@ const switchTab = (id) => {
 };
 
 const createPost = (post) => {
+
     const image = post.image;
+    const userImage = post.userImage;
     const div = document.createElement( "article" );
     div.classList.add( "post" );
     div.innerHTML = `
@@ -62,7 +74,7 @@ const createPost = (post) => {
                     target="_blank"
                     class="post__avatar"
                   >
-                    <img src="${image}" alt="User Picture" />
+                    <img src="${userImage}" alt="User Picture" />
                   </a>
                   <a href="#" class="post__user">phero</a>
                 </div>
@@ -120,9 +132,9 @@ const createPost = (post) => {
                   <div class="post__description">
                     <small>
                       <a class="post__name--underline" href="#">
-                          ${post.comments?.user}
+                          ${post?.comments[0]?.user}
                       </a>
-                      ${post.comments?.text}
+                      ${post?.comments[0]?.text}
                     </small>
                   </div>
                   <span class="post__date-time">30 minutes ago</span>
@@ -133,6 +145,7 @@ const createPost = (post) => {
 };
 
 const showPosts = (posts) => {
+  console.log(posts)
     const productsContainer = document.getElementById( "posts" );
     productsContainer.innerHTML = "";
 
@@ -144,17 +157,23 @@ const showPosts = (posts) => {
 
 const displayLikedPosts = () => {
     const likedPosts = getLikedPosts();
+    const likedPostContainer = document.getElementById( "liked" );
+    likedPostContainer.innerHTML = "";
     likedPosts.forEach((post) => {
         const div = createPost(post);
-        document.getElementById( "liked" ).appendChild(div);
+        likedPostContainer.appendChild(div);
     });
 };
 
 const displayReportedPosts = () => {
     const reportedPosts = getReportedPosts();
-    posts.forEach((post) => {
+    const reportPostContainer = document.getElementById( "reported" )
+    reportPostContainer.innerHTML = "";
+    reportedPosts.forEach((post) => {
+      console.log(post)
         const div = createPost(post);
-        document.getElementById( "reported" ).appendChild(div);
+        console.log(div)
+        reportPostContainer.appendChild(div);
     });
 };
 
